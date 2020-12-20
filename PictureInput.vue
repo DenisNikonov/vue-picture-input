@@ -523,12 +523,12 @@ export default {
         mode: 'cors',
         headers: headers
       }).then(response => {
-        return response.blob()
+        return { imageBlob: response.blob(), mimeType: response.headers.get("Content-Type")}
       })
-      .then(imageBlob => {
+      .then(({ imageBlob, mimeType }) => {
         let e = { target: { files: [] } }
         const fileName = options.fileName || source.split('/').slice(-1)[0]
-        let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0].split('?')[0]))
+        let mediaType = options.mediaType || ('image/' + mimeType || (options.fileType || fileName.split('.').slice(-1)[0].split('?')[0]))
         mediaType = mediaType.replace('jpg', 'jpeg')
         if (mediaType === 'image/svg') {
           mediaType = 'image/svg+xml'
